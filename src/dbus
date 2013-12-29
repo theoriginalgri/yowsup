@@ -1,0 +1,33 @@
+#!/usr/bin/python
+
+import argparse, sys, os, csv
+from Yowsup.Common.utilities import Utilities
+from Yowsup.Common.debugger import Debugger
+from Yowsup.Common.constants import Constants
+from Examples.CmdClient import WhatsappCmdClient
+from Examples.EchoClient import WhatsappEchoClient
+from Examples.ListenerClient import WhatsappListenerClient
+from Yowsup.Registration.v2.existsrequest import WAExistsRequest as WAExistsRequestV2
+from Yowsup.Registration.v2.coderequest import WACodeRequest as WACodeRequestV2
+from Yowsup.Registration.v2.regrequest import WARegRequest as WARegRequestV2
+from Yowsup.Contacts.contacts import WAContactsSyncRequest
+
+import threading,time, base64
+
+def startDbusInterface():
+        from dbus.mainloop.glib import DBusGMainLoop
+        from Yowsup.Interfaces.DBus.DBusInterface import DBusInitInterface
+        import gobject
+        
+        DBusGMainLoop(set_as_default=True)
+        
+        DBusInitInterface()
+        
+        mainloop = gobject.MainLoop()
+        
+        gobject.threads_init()
+        print("starting")
+        mainloop.run()
+
+
+startDbusInterface()
