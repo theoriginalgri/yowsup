@@ -20,13 +20,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
 import dbus.service
+import inspect
 
-import os
-parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__+"/..")))
-os.sys.path.insert(0,parentdir)
-
-from Interfaces.Interface import SignalInterfaceBase, MethodInterfaceBase
-from connectionmanager import YowsupConnectionManager
+from ...Interfaces.Interface import SignalInterfaceBase, MethodInterfaceBase
+from ...connectionmanager import YowsupConnectionManager
 
 
 class DBusInitInterface(dbus.service.Object):
@@ -289,8 +286,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def pong(self):
 		pass
 
-	
-		
+
 class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	DBUS_INTERFACE = 'com.yowsup.methods'
 
@@ -301,215 +297,200 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 		busName = dbus.service.BusName(self.DBUS_INTERFACE, bus=dbus.SessionBus())
 		dbus.service.Object.__init__(self, busName, '/com/yowsup/%s/methods'%connectionId)
 
+		self._checkMethods()
 
-	def interfaceMethod(fn):
-		def wrapped(self, *args):
-			fnName = fn.__name__
-			return self.call(fnName, args)
-		return wrapped
+	def _checkMethods(self):
+		for method in self.methods:
+			try:
+				getattr(self, method)
+			except AttributeError:
+				print "Missing function %s" % method
+
+	def interfaceMethod(self):
+		frame = inspect.stack()[1]
+		fnName = frame[3]
+		args = frame[0].f_locals
+		del args["self"]
+
+		return self.call(fnName, args)
 
 	@dbus.service.method(DBUS_INTERFACE)
 	def getMethods(self):
 		return self.methods
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def getVersion(self):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def auth_login(self, number, password):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_send(self, jid, message):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_imageSend(self, jid, url, name, size, preview):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_videoSend(self, jid, url, name, size, preview):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_audioSend(self, jid, url, name, size):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_locationSend(self, jid, latitude, longitude, preview): #@@TODO add name to location?
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_vcardSend(self, jid, data, name):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def message_ack(self, jid, msgId):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def notification_ack(self, jid, msgId):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def clientconfig_send(self):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def delivered_ack(self, jid, msgId):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def visible_ack(self, jid, msgId):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def ping(self):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def pong(self, pingId):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def typing_send(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def typing_paused(self,jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def subject_ack(self, jid, msgId):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_getInfo(self,jid):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_getPicture(self,jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_create(self, subject):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_addParticipants(self, jid, participants):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_removeParticipants(self, jid, participants):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_setPicture(self, jid, filepath):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_end(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_setSubject(self, jid, subject):
-		pass
+		return self.interfaceMethod()
 
+
+	@dbus.service.method(DBUS_INTERFACE)
+	def group_getGroups(self, gtype):
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def group_getParticipants(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def presence_sendAvailable(self):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def presence_request(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def presence_sendUnavailable(self):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def presence_sendAvailableForChat(self):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def presence_subscribe(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def presence_unsubscribe(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def contact_getProfilePicture(self, jid):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
+	def picture_get(self,jid):
+		return self.interfaceMethod()
+
+	@dbus.service.method(DBUS_INTERFACE)
 	def picture_getIds(self,jids):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def profile_getPicture(self):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def profile_setStatus(self, status):
-		pass
+		return self.interfaceMethod()
 	
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def profile_setPicture(self, filepath):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def ready(self):
-		pass
+		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	@interfaceMethod
 	def disconnect(self, reason):
-		pass
+		return self.interfaceMethod()
+
+	def message_broadcast(self, message):
+		return self.interfaceMethod()
+
+	@dbus.service.method(DBUS_INTERFACE)
+	def media_requestUpload(self):
+		return self.interfaceMethod()
 
