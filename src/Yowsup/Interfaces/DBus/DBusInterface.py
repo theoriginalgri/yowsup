@@ -37,13 +37,14 @@ class DBusInitInterface(dbus.service.Object):
 		dbus.service.Object.__init__(self,self.busName, '/com/yowsup')
 		
 		self.connections = {}
+		self.connectionNames = []
 		
 		super(DBusInitInterface, self).__init__()
 		
 	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def init(self, username):
 		man = YowsupConnectionManager()
-		man.setInterfaces(DBusSignalInterface(self.busName, username), DBusMethodInterface(self.busName, username))
+		man.setInterfaces(DBusSignalInterface(self.busName, username), DBusMethodInterface(self.busName, username, man))
 		self.connections[username] = man
 		
 		return username
@@ -294,8 +295,9 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	DBUS_INTERFACE = 'com.yowsup.methods'
 
-	def __init__(self, busName, connectionId):
+	def __init__(self, busName, connectionId, manager):
 		self.connectionId = connectionId
+		self.manager = manager
 		super(DBusMethodInterface,self).__init__();
 
 		dbus.service.Object.__init__(self, busName, '/com/yowsup/%s/methods'%connectionId)
@@ -316,6 +318,9 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 		del args["self"]
 
 		return self.call(fnName, args)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="b")
+	def isConnected(self):
+		return self.manager.state == 2
 
 	@dbus.service.method(DBUS_INTERFACE, out_signature="as")
 	def getMethods(self):
