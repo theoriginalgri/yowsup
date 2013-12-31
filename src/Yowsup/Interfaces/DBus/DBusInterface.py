@@ -43,11 +43,20 @@ class DBusInitInterface(dbus.service.Object):
 		
 	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def init(self, username):
+		if username in self.connectionNames:
+			print "Already registered %s" % username
+			return
+
 		man = YowsupConnectionManager()
 		man.setInterfaces(DBusSignalInterface(self.busName, username), DBusMethodInterface(self.busName, username, man))
 		self.connections[username] = man
+		self.connectionNames.append(username)
 		
 		return username
+
+	@dbus.service.method(DBUS_INTERFACE, out_signature="as")
+	def connections(self):
+		return self.connectionNames
 		
 
 class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
@@ -78,7 +87,6 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 				print("Skipping %s" %s)
 
 	## Signals ##
-	
 	
 	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def auth_success(self, username):
