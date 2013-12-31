@@ -28,7 +28,9 @@ from ...connectionmanager import YowsupConnectionManager
 DBUS_SERVICE = "com.yowsup"
 
 class DBusInitInterface(dbus.service.Object):
-	DBUS_INTERFACE = "com.yowsup.methods"
+
+	DBUS_INTERFACE = "com.yowsup.initializer"
+
 	def __init__(self):
 		self.busName = dbus.service.BusName(DBUS_SERVICE, bus=dbus.SessionBus())
 		dbus.service.Object.__init__(self,self.busName, '/com/yowsup')
