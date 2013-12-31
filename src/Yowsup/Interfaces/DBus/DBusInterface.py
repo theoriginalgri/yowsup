@@ -21,6 +21,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import dbus.service
 import inspect
+import base64
 
 from ...Interfaces.Interface import SignalInterfaceBase, MethodInterfaceBase
 from ...connectionmanager import YowsupConnectionManager
@@ -326,7 +327,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def auth_login(self, number, password):
-		return self.interfaceMethod()
+		# FIXME: For some reason there is no way to get the dbus.String to a str without losing
+		#		 characters. So I'll just do the conversion here
+		password = base64.b64decode(bytes(password))
+
+		return self.call("auth_login", (number, password))
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def message_send(self, jid, message):
