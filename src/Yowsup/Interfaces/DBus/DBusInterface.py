@@ -78,11 +78,11 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	## Signals ##
 	
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def auth_success(self, username):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def auth_fail(self, username, reason):
 		pass
 	
@@ -91,14 +91,14 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 		pass
 
 	@dbus.service.signal(DBUS_INTERFACE)
-	def presence_available(self, jid):
+	def presence_available(self, jid, signature="s"):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def presence_unavailable(self, jid):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssibsb")
 	def message_received(self, msgId, jid, content, timestamp, wantsReceipt, pushName, isBroadcast):
 		pass
 #--------------------------------------------------------------------------- Groups
@@ -110,7 +110,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_gotInfo(self, jid, owner, subject, subjectOwner, subjectT, creation):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def group_setSubjectSuccess(self, jid):
 		pass
 	
@@ -118,15 +118,15 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_subjectReceived(self, msgId, fromAttribute, author, newSubject, timestamp, receiptRequested):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sas")
 	def group_addParticipantsSuccess(self, jid, jids):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, , signature="sas")
 	def group_removeParticipantsSuccess(self, jid, jids):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def group_createSuccess(self, jid):
 		pass
 	
@@ -134,11 +134,11 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_createFail(self, errorCode):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def group_endSuccess(self, jid):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sss")
 	def group_gotPicture(self, jid, pictureId, filepath):
 		pass
 
@@ -146,7 +146,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_infoError(self, errorCode):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sas")
 	def group_gotParticipants(self,jid, jids):
 		pass
 	
@@ -160,7 +160,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	
 #------------------------------------------------------------------------------ 
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def profile_setStatusSuccess(self, jid, messageId):
 		pass
 	
@@ -193,11 +193,11 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def contact_gotProfilePictureId(self, jid, pictureId):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def contact_typing(self, jid):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def contact_paused(self, jid):
 		pass
 	
@@ -277,7 +277,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def message_error(self, messageId, jid, errorCode):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def disconnected(self, reason):
 		pass
 	
@@ -316,19 +316,19 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 
 		return self.call(fnName, args)
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="as")
 	def getMethods(self):
 		return self.methods
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def getVersion(self):
 		return self.interfaceMethod()
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def auth_login(self, number, password):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def message_send(self, jid, message):
 		return self.interfaceMethod()
 	
@@ -352,11 +352,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def message_vcardSend(self, jid, data, name):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def message_ack(self, jid, msgId):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def notification_ack(self, jid, msgId):
 		return self.interfaceMethod()
 
@@ -364,11 +364,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def clientconfig_send(self):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def delivered_ack(self, jid, msgId):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def visible_ack(self, jid, msgId):
 		return self.interfaceMethod()
 
@@ -380,23 +380,23 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def pong(self, pingId):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def typing_send(self, jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def typing_paused(self,jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def subject_ack(self, jid, msgId):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def group_getInfo(self,jid):
 		return self.interfaceMethod()
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def group_getPicture(self,jid):
 		return self.interfaceMethod()
 
@@ -412,15 +412,15 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def group_removeParticipants(self, jid, participants):
 		return self.interfaceMethod()
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def group_setPicture(self, jid, filepath):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def group_end(self, jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def group_setSubject(self, jid, subject):
 		return self.interfaceMethod()
 
@@ -429,7 +429,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def group_getGroups(self, gtype):
 		return self.interfaceMethod()
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def group_getParticipants(self, jid):
 		return self.interfaceMethod()
 
@@ -437,7 +437,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def presence_sendAvailable(self):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def presence_request(self, jid):
 		return self.interfaceMethod()
 
@@ -449,23 +449,23 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def presence_sendAvailableForChat(self):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def presence_subscribe(self, jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def presence_unsubscribe(self, jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def contact_getProfilePicture(self, jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def picture_get(self,jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="as")
 	def picture_getIds(self,jids):
 		return self.interfaceMethod()
 
@@ -473,11 +473,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def profile_getPicture(self):
 		return self.interfaceMethod()
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def profile_setStatus(self, status):
 		return self.interfaceMethod()
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def profile_setPicture(self, filepath):
 		return self.interfaceMethod()
 
@@ -485,11 +485,12 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def ready(self):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def disconnect(self, reason):
 		return self.interfaceMethod()
 
-	def message_broadcast(self, message):
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ass")
+	def message_broadcast(self, jids, content):
 		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
