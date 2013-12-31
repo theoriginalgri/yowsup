@@ -1,3 +1,7 @@
+# This is my personal fork to bring the dbus part of yowsup back to life.
+
+---
+
 ## Yowsup opened Whatsapp service under platforms!
 
 ## About Whatsapp
