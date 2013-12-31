@@ -99,7 +99,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 		pass
 	
 	@dbus.service.signal(DBUS_INTERFACE)
-	def message_received(self, msgId, jid, content, timestamp, wantsReceipt, isBroadcast):
+	def message_received(self, msgId, jid, content, timestamp, wantsReceipt, pushName, isBroadcast):
 		pass
 #--------------------------------------------------------------------------- Groups
 	@dbus.service.signal(DBUS_INTERFACE)
@@ -493,6 +493,6 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 		return self.interfaceMethod()
 
 	@dbus.service.method(DBUS_INTERFACE)
-	def media_requestUpload(self):
+	def media_requestUpload(self,  b64Hash, t, size, b64OrigHash = None):
 		return self.interfaceMethod()
 
