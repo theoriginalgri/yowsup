@@ -123,7 +123,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_addParticipantsSuccess(self, jid, jids):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE, , signature="sas")
+	@dbus.service.signal(DBUS_INTERFACE, signature="sas")
 	def group_removeParticipantsSuccess(self, jid, jids):
 		pass
 	
@@ -178,15 +178,15 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def status_dirty(self):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def receipt_messageSent(self, jid, msgId):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def receipt_messageDelivered(self, jid, msgId):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def receipt_visible(self, jid, msgId):
 		pass
 
@@ -232,24 +232,24 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 		pass
 
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssssbb")
 	def image_received(self, messageId, jid, preview, url, size, wantsReceipt, isBroadcast):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssssbb")
 	def video_received(self, messageId, jid, preview, url, size, wantsReceipt, isBroadcast):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssbb")
 	def audio_received(self, messageId, jid, url, size, wantsReceipt, isBroadcast):
 		pass
 
 	@dbus.service.signal(DBUS_INTERFACE)
-	def location_received(self, messageId, jid, name, preview, latitude, longitude, isBroadcast):
+	def location_received(self, messageId, jid, name, preview, latitude, longitude, wantsReceipt, isBroadcast):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
-	def vcard_received(self, messageId, jid, name, data, isBroadcast):
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssb")
+	def vcard_received(self, messageId, jid, name, data, wantsReceipt, isBroadcast):
 		pass
 
 
@@ -269,12 +269,12 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_locationReceived(self, messageId, jid, author, name, preview, latitude, longitude, wantsReceipt):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssssb")
 	def group_vcardReceived(self, messageId, jid, author, name, data, wantsReceipt):
 		pass
 	
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssi")
 	def message_error(self, messageId, jid, errorCode):
 		pass
 	
@@ -282,7 +282,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def disconnected(self, reason):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def ping(self, pingId):
 		pass
 	
@@ -323,7 +323,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	
 	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def getVersion(self):
-		return self.interfaceMethod()
+		return self.call("getVersion", ())
 	
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def auth_login(self, number, password):
@@ -339,15 +339,15 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	
 	@dbus.service.method(DBUS_INTERFACE)
 	def message_imageSend(self, jid, url, name, size, preview):
-		return self.interfaceMethod()
+		return self.call("message_imageSend", (jid, url, name, size, preview))
 	
 	@dbus.service.method(DBUS_INTERFACE)
 	def message_videoSend(self, jid, url, name, size, preview):
-		return self.interfaceMethod()
+		return self.call("message_videoSend", (jid, url, name, size, preview))
 	
 	@dbus.service.method(DBUS_INTERFACE)
 	def message_audioSend(self, jid, url, name, size):
-		return self.interfaceMethod()
+		return self.call("message_audioSend", (jid, url, name, size))
 	
 	@dbus.service.method(DBUS_INTERFACE)
 	def message_locationSend(self, jid, latitude, longitude, preview): #@@TODO add name to location?
@@ -355,11 +355,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	
 	@dbus.service.method(DBUS_INTERFACE)
 	def message_vcardSend(self, jid, data, name):
-		return self.interfaceMethod()
+		return self.call("message_vcardSend", (jid, data, name))
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def message_ack(self, jid, msgId):
-		return self.call("message_ack", (dbus.UTF8String(jid), dbus.UTF8String(msgId)))
+		return self.call("message_ack", (jid, msgId))
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def notification_ack(self, jid, msgId):
@@ -381,7 +381,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def ping(self):
 		return self.call("ping", ())
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def pong(self, pingId):
 		return self.call("pong", (pingId,))
 
@@ -405,7 +405,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def group_getPicture(self,jid):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def group_create(self, subject):
 		return self.interfaceMethod()
 
