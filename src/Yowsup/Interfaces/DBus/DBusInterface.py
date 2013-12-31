@@ -335,7 +335,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def message_send(self, jid, message):
-		return self.interfaceMethod()
+		return self.call("message_send", (str(jid), str(message)))
 	
 	@dbus.service.method(DBUS_INTERFACE)
 	def message_imageSend(self, jid, url, name, size, preview):
@@ -359,7 +359,7 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def message_ack(self, jid, msgId):
-		return self.interfaceMethod()
+		return self.call("message_ack", (dbus.UTF8String(jid), dbus.UTF8String(msgId)))
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
 	def notification_ack(self, jid, msgId):
@@ -379,11 +379,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 
 	@dbus.service.method(DBUS_INTERFACE)
 	def ping(self):
-		return self.interfaceMethod()
+		return self.call("ping", ())
 
 	@dbus.service.method(DBUS_INTERFACE)
 	def pong(self, pingId):
-		return self.interfaceMethod()
+		return self.call("pong", (pingId,))
 
 	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def typing_send(self, jid):
