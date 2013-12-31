@@ -25,12 +25,13 @@ import inspect
 from ...Interfaces.Interface import SignalInterfaceBase, MethodInterfaceBase
 from ...connectionmanager import YowsupConnectionManager
 
+DBUS_SERVICE = "com.yowsup"
 
 class DBusInitInterface(dbus.service.Object):
 	DBUS_INTERFACE = "com.yowsup.methods"
 	def __init__(self):
-		self.busName = dbus.service.BusName(self.DBUS_INTERFACE, bus=dbus.SessionBus())
-		dbus.service.Object.__init__(self,self.busName, '/com/yowsup/methods')
+		self.busName = dbus.service.BusName(DBUS_SERVICE, bus=dbus.SessionBus())
+		dbus.service.Object.__init__(self,self.busName, '/com/yowsup')
 		
 		self.connections = {}
 		
@@ -39,7 +40,7 @@ class DBusInitInterface(dbus.service.Object):
 	@dbus.service.method(DBUS_INTERFACE)
 	def init(self, username):
 		man = YowsupConnectionManager()
-		man.setInterfaces(DBusSignalInterface(username), DBusMethodInterface(username))
+		man.setInterfaces(DBusSignalInterface(self.busName, username), DBusMethodInterface(self.busName, username))
 		self.connections[username] = man
 		
 		return username
@@ -49,9 +50,9 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 
 	DBUS_INTERFACE = "com.yowsup.signals"
 	
-	def __init__(self, connectionId):
+	def __init__(self, busName, connectionId):
 		self.connectionId = connectionId
-		self.busName = dbus.service.BusName(self.DBUS_INTERFACE, bus=dbus.SessionBus())
+		self.busName = busName
 		dbus.service.Object.__init__(self, self.busName, '/com/yowsup/%s/signals'%connectionId)
 
 		super(DBusSignalInterface,self).__init__();
@@ -290,11 +291,10 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	DBUS_INTERFACE = 'com.yowsup.methods'
 
-	def __init__(self, connectionId):
+	def __init__(self, busName, connectionId):
 		self.connectionId = connectionId
 		super(DBusMethodInterface,self).__init__();
 
-		busName = dbus.service.BusName(self.DBUS_INTERFACE, bus=dbus.SessionBus())
 		dbus.service.Object.__init__(self, busName, '/com/yowsup/%s/methods'%connectionId)
 
 		self._checkMethods()
