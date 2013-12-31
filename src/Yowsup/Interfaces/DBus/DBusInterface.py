@@ -40,7 +40,7 @@ class DBusInitInterface(dbus.service.Object):
 		
 		super(DBusInitInterface, self).__init__()
 		
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="s")
 	def init(self, username):
 		man = YowsupConnectionManager()
 		man.setInterfaces(DBusSignalInterface(self.busName, username), DBusMethodInterface(self.busName, username))
@@ -63,7 +63,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 		self._attachDbusSignalsToSignals()
 
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="as")
 	def getSignals(self):
 		return self.signals
 	
@@ -87,7 +87,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def auth_fail(self, username, reason):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="si")
 	def presence_updated(self, jid, lastSeen):
 		pass
 
@@ -103,11 +103,11 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def message_received(self, msgId, jid, content, timestamp, wantsReceipt, pushName, isBroadcast):
 		pass
 #--------------------------------------------------------------------------- Groups
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssib")
 	def group_messageReceived(self, msgId, jid, author, content, timestamp, wantsReceipt):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssii")
 	def group_gotInfo(self, jid, owner, subject, subjectOwner, subjectT, creation):
 		pass
 	
@@ -115,8 +115,8 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_setSubjectSuccess(self, jid):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
-	def group_subjectReceived(self, msgId, fromAttribute, author, newSubject, timestamp, receiptRequested):
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssib")
+	def group_subjectReceived(self, msgId, gid, author, newSubject, timestamp, wantsReceipt):
 		pass
 	
 	@dbus.service.signal(DBUS_INTERFACE, signature="sas")
@@ -131,7 +131,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_createSuccess(self, jid):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="i")
 	def group_createFail(self, errorCode):
 		pass
 	
@@ -143,7 +143,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_gotPicture(self, jid, pictureId, filepath):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="i")
 	def group_infoError(self, errorCode):
 		pass
 
@@ -151,11 +151,11 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def group_gotParticipants(self,jid, jids):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def group_setPictureSuccess(self, jid, pictureId):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="si")
 	def group_setPictureError(self, jid, errorCode):
 		pass
 	
@@ -166,11 +166,11 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 		pass
 	
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="s")
 	def profile_setPictureSuccess(self, pictureId):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="i")
 	def profile_setPictureError(self, errorCode):
 		pass
 
@@ -190,7 +190,7 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def receipt_visible(self, jid, msgId):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ss")
 	def contact_gotProfilePictureId(self, jid, pictureId):
 		pass
 	
@@ -202,32 +202,32 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def contact_paused(self, jid):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sss")
 	def contact_gotProfilePicture(self, jid, pictureId, filename):
 		pass
 
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sissb")
 	def notification_contactProfilePictureUpdated(self, jid, timestamp, messageId, pictureId, wantsReceipt = True):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sisb")
 	def notification_contactProfilePictureRemoved(self, jid, timestamp, messageId, wantsReceipt = True):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssisb")
 	def notification_groupParticipantAdded(self, gJid, jid, author, timestamp, messageId, wantsReceipt = True):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssisb")
 	def notification_groupParticipantRemoved(self, gjid, jid, author, timestamp, messageId, wantsReceipt = True):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssissb")
 	def notification_groupPictureUpdated(self, jid, author, timestamp, messageId, pictureId, wantsReceipt = True):
 		pass
 	
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssisb")
 	def notification_groupPictureRemoved(self, jid, author, timestamp, messageId, wantsReceipt = True):
 		pass
 
@@ -244,24 +244,24 @@ class DBusSignalInterface(SignalInterfaceBase, dbus.service.Object):
 	def audio_received(self, messageId, jid, url, size, wantsReceipt, isBroadcast):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssssbb")
 	def location_received(self, messageId, jid, name, preview, latitude, longitude, wantsReceipt, isBroadcast):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE, signature="ssssb")
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssbb")
 	def vcard_received(self, messageId, jid, name, data, wantsReceipt, isBroadcast):
 		pass
 
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssssb")
 	def group_imageReceived(self, messageId, jid, author, preview, url, size, wantsReceipt):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="ssssssb")
 	def group_videoReceived(self, messageId, jid, author, preview, url, size, wantsReceipt):
 		pass
 
-	@dbus.service.signal(DBUS_INTERFACE)
+	@dbus.service.signal(DBUS_INTERFACE, signature="sssssb")
 	def group_audioReceived(self, messageId, jid, author, url, size, wantsReceipt):
 		pass
 
@@ -409,11 +409,11 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 	def group_create(self, subject):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="sas")
 	def group_addParticipants(self, jid, participants):
 		return self.interfaceMethod()
 
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, in_signature="sas")
 	def group_removeParticipants(self, jid, participants):
 		return self.interfaceMethod()
 	
