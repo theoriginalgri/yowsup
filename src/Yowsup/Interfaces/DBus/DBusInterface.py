@@ -339,27 +339,27 @@ class DBusMethodInterface(MethodInterfaceBase, dbus.service.Object):
 
 		return self.call("auth_login", (number, password))
 
-	@dbus.service.method(DBUS_INTERFACE, in_signature="ss")
+	@dbus.service.method(DBUS_INTERFACE, in_signature="ss", out_signature="s")
 	def message_send(self, jid, message):
 		return self.call("message_send", (str(jid), str(message)))
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def message_imageSend(self, jid, url, name, size, preview):
 		return self.call("message_imageSend", (jid, url, name, size, preview))
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def message_videoSend(self, jid, url, name, size, preview):
 		return self.call("message_videoSend", (jid, url, name, size, preview))
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def message_audioSend(self, jid, url, name, size):
 		return self.call("message_audioSend", (jid, url, name, size))
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def message_locationSend(self, jid, latitude, longitude, preview): #@@TODO add name to location?
 		return self.call("message_locationSend", (jid, latitude, long, preview))
 	
-	@dbus.service.method(DBUS_INTERFACE)
+	@dbus.service.method(DBUS_INTERFACE, out_signature="s")
 	def message_vcardSend(self, jid, data, name):
 		return self.call("message_vcardSend", (jid, data, name))
 
